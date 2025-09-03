@@ -37,6 +37,11 @@ class Candidate extends Model
 	{
 		return $this->hasMany(OfferLetter::class);
 	}
+
+	public function assignments(): HasMany
+	{
+		return $this->hasMany(Assignment::class);
+	}
 }
 
 

@@ -85,6 +85,12 @@
 	</div>
 	<div class="grid md:grid-cols-2 gap-4">
 		<div class="border p-3">
+			<h2 class="font-semibold mb-2">Assignments</h2>
+			<a href="{{ route('assignments.candidate.index', $candidate) }}" class="bg-purple-600 text-white px-3 py-1 mb-3 inline-block">View Assignments</a>
+			<p class="text-sm text-gray-600">Manage assignments for this candidate</p>
+		</div>
+
+		<div class="border p-3">
 			<h2 class="font-semibold mb-2">Assessments</h2>
 			@if($candidate->interviews()->where('round', 'second')->where('result', 'pass')->exists())
 				<form method="post" action="{{ route('candidates.assessments.store',$candidate) }}" enctype="multipart/form-data" class="space-y-2 mb-3">

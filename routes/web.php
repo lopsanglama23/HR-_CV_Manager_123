@@ -6,6 +6,7 @@ use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InterviewerController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\AssignmentController;
 use App\Models\Assessment;
 use App\Models\Candidate;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,16 @@ Route::middleware('auth')->group(function () {
     // Interviewers
     Route::get('interviewers', [InterviewerController::class, 'index'])->name('interviewers.index');
     Route::get('interviewers/show', [InterviewerController::class, 'show'])->name('interviewers.show');
+
+    // Assignments
+    Route::get('assignments', [AssignmentController::class, 'allAssignments'])->name('assignments.index');
+    Route::get('candidates/{candidate}/assignments', [AssignmentController::class, 'index'])->name('assignments.candidate.index');
+    Route::get('candidates/{candidate}/assignments/create', [AssignmentController::class, 'create'])->name('assignments.create');
+    Route::post('candidates/{candidate}/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('candidates/{candidate}/assignments/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+    Route::get('candidates/{candidate}/assignments/{assignment}/edit', [AssignmentController::class, 'edit'])->name('assignments.edit');
+    Route::patch('candidates/{candidate}/assignments/{assignment}', [AssignmentController::class, 'update'])->name('assignments.update');
+    Route::post('candidates/{candidate}/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('assignments.submit');
 });
 
 require __DIR__.'/auth.php';
