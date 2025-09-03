@@ -75,6 +75,10 @@
 						<button class="bg-gray-700 text-white px-2">Save</button>
 						<button class="bg-red-600 text-white px-2" type="button" onclick="if(confirm('Are you sure?')) { document.getElementById('delete-form-{{ $i->id }}').submit(); }">Delete</button>
 					</form>
+					<form id="delete-form-{{ $i->id }}" method="post" action="{{ route('candidates.interviews.destroy',[$candidate,$i]) }}" style="display: none;">
+						@csrf
+						@method('DELETE')
+					</form>
 				</div>
 			@endforeach
 		</div>
