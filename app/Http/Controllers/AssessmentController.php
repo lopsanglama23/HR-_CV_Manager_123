@@ -2,16 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AssessmentNotification;
 use App\Models\Assessment;
 use App\Models\Candidate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class AssessmentController extends Controller
 {
 	public function store(Request $request, Candidate $candidate): RedirectResponse
 	{
+		// Check if the candidate has completed the second round interview
+		$secondRoundCompleted = $candidate->interviews()->where('round', 'second')->where('result', 'pass')->exists();
+		if (!$secondRoundCompleted) {
+			return back()->withErrors(['error' => 'Assessment can only be given after the second round of interview is completed.']);
+		}
+
 		$data = $request->validate([
 			'title' => ['required', 'string', 'max:255'],
 			'remarks' => ['nullable', 'string'],
@@ -22,7 +30,13 @@ class AssessmentController extends Controller
 		if ($request->hasFile('attachment')) {
 			$data['attachment_path'] = $request->file('attachment')->store('assessments', 'public');
 		}
-		Assessment::create($data);
+		$assessment = Assessment::create($data);
+
+		// Send email notification to candidate
+		if ($candidate->email) {
+			Mail::to($candidate->email)->send(new AssessmentNotification($assessment));
+		}
+
 		return back()->with('status', 'Assessment saved');
 	}
 

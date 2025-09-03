@@ -5,10 +5,26 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\OfferController;
+use App\Models\Assessment;
+use App\Models\Candidate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Email preview route
+Route::get('/email-preview/assessment-notification', function () {
+    $candidate = new Candidate(['name' => 'John Doe', 'email' => 'john@example.com']);
+    $candidate->id = 1; // Dummy ID for preview
+    $assessment = new Assessment([
+        'title' => 'Sample Assessment',
+        'score' => 85,
+        'remarks' => 'Good performance overall.',
+        'attachment_path' => 'assessments/sample.pdf'
+    ]);
+    $assessment->candidate = $candidate;
+    return view('emails.assessment_notification', compact('assessment', 'candidate'));
 });
 
 Route::get('/dashboard', function () {
