@@ -33,6 +33,16 @@ class InterviewController extends Controller
 			}
 		}
 
+		// Send reminder email to interviewer
+		if ($interview->interviewer_email) {
+			try {
+				\Mail::to($interview->interviewer_email)->send(new \App\Mail\InterviewReminder($interview));
+			} catch (\Exception $e) {
+				// Log the error but don't fail the scheduling
+				\Log::error('Failed to send interview reminder email: ' . $e->getMessage());
+			}
+		}
+
 		return back()->with('status', 'Interview scheduled');
 	}
 

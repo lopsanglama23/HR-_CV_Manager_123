@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\InterviewController;
+use App\Http\Controllers\InterviewerController;
 use App\Http\Controllers\OfferController;
 use App\Models\Assessment;
 use App\Models\Candidate;
@@ -52,6 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::post('offers/templates', [OfferController::class, 'storeTemplate'])->name('offers.templates.store');
     Route::get('candidates/{candidate}/offers/create', [OfferController::class, 'createForCandidate'])->name('offers.create');
     Route::post('candidates/{candidate}/offers', [OfferController::class, 'storeForCandidate'])->name('offers.store');
+
+    // Interviewers
+    Route::get('interviewers', [InterviewerController::class, 'index'])->name('interviewers.index');
+    Route::get('interviewers/show', [InterviewerController::class, 'show'])->name('interviewers.show');
 });
 
 require __DIR__.'/auth.php';
