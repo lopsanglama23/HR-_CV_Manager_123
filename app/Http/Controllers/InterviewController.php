@@ -57,6 +57,20 @@ class InterviewController extends Controller
 		]);
 		$interview->update($data);
 
+		// Update candidate status based on interview round and result
+		if ($data['result'] === 'pass') {
+			if ($interview->round === 'first' && $candidate->status !== 'first_interview') {
+				$candidate->status = 'first_interview';
+				$candidate->save();
+			} elseif ($interview->round === 'second' && $candidate->status !== 'second_interview') {
+				$candidate->status = 'second_interview';
+				$candidate->save();
+			} elseif ($interview->round === 'third' && $candidate->status !== 'third_interview') {
+				$candidate->status = 'third_interview';
+				$candidate->save();
+			}
+		}
+
 		// Send rejection email if second interview failed
 		if ($interview->round === 'second' && $data['result'] === 'fail' && $interview->candidate->email) {
 			try {
