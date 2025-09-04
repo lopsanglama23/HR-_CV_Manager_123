@@ -36,13 +36,77 @@ class OfferController extends Controller
 	public function storeForCandidate(Request $request, Candidate $candidate): RedirectResponse
 	{
 		$data = $request->validate([
-			'title' => ['required', 'string', 'max:255'],
-			'body_markdown' => ['required', 'string'],
+			'position' => ['required', 'string', 'max:255'],
+			'start_date' => ['required', 'date'],
+			'salary' => ['required', 'string'],
+			'reporting_to' => ['required', 'string'],
+			'responsibilities' => ['required', 'string'],
+			'benefits' => ['required', 'string'],
+			'contingencies' => ['required', 'string'],
 		]);
-		$data['candidate_id'] = $candidate->id;
-		OfferLetter::create($data);
+
+		// Generate the markdown content
+		$body_markdown = $this->generateOfferLetterMarkdown($data, $candidate);
+
+		OfferLetter::create([
+			'title' => $data['position'],
+			'body_markdown' => $body_markdown,
+			'candidate_id' => $candidate->id,
+		]);
+
 		return redirect()->route('candidates.show', $candidate)->with('status', 'Offer created');
 	}
-}
 
+	public function preview(Request $request, Candidate $candidate): View
+	{
+		$data = $request->validate([
+			'position' => ['required', 'string', 'max:255'],
+			'start_date' => ['required', 'date'],
+			'salary' => ['required', 'string'],
+			'reporting_to' => ['required', 'string'],
+			'responsibilities' => ['required', 'string'],
+			'benefits' => ['required', 'string'],
+			'contingencies' => ['required', 'string'],
+		]);
+
+		// Create a formatted offer letter content
+		$body_markdown = $this->generateOfferLetterMarkdown($data, $candidate);
+
+		$offer = new OfferLetter([
+			'title' => $data['position'],
+			'body_markdown' => $body_markdown,
+		]);
+
+		return view('offers.preview', compact('offer', 'candidate', 'data'));
+	}
+
+	private function generateOfferLetterMarkdown(array $data, Candidate $candidate): string
+	{
+		return "# {$data['position']}
+
+Dear {$candidate->name},
+
+We are pleased to offer you the position of {$data['position']} at Cellapp. This letter outlines the terms and conditions of your employment.
+
+## Position Details
+- **Position:** {$data['position']}
+- **Start Date:** {$data['start_date']}
+- **Reporting To:** {$data['reporting_to']}
+- **Salary:** {$data['salary']}
+
+## Job Responsibilities
+{$data['responsibilities']}
+
+## Benefits
+{$data['benefits']}
+
+## Contingencies
+{$data['contingencies']}
+
+We look forward to welcoming you to the Cellapp team!
+
+Best regards,  
+Cellapp HR Team";
+	}
+}
 

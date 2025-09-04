@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('offers/templates', [OfferController::class, 'templates'])->name('offers.templates');
     Route::post('offers/templates', [OfferController::class, 'storeTemplate'])->name('offers.templates.store');
     Route::get('candidates/{candidate}/offers/create', [OfferController::class, 'createForCandidate'])->name('offers.create');
+    Route::post('candidates/{candidate}/offers/preview', [OfferController::class, 'preview'])->name('offers.preview');
     Route::post('candidates/{candidate}/offers', [OfferController::class, 'storeForCandidate'])->name('offers.store');
 
     // Interviewers

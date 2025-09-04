@@ -124,11 +124,24 @@
 		</div>
 	<div class="border p-3">
 		<h2 class="font-semibold mb-2">Offer Letters</h2>
-		<a href="{{ route('offers.create',$candidate) }}" class="bg-purple-700 text-white px-3 py-1">Create Offer</a>
+		@if($candidate->interviews()->where('round', 'second')->where('result', 'pass')->exists() || $candidate->interviews()->where('round', 'third')->where('result', 'pass')->exists())
+			<a href="{{ route('offers.create',$candidate) }}" class="bg-purple-700 text-white px-3 py-1">Create Offer</a>
+		@else
+			<p class="text-gray-600">Offer can only be created after completing second round of interview or third round if needed.</p>
+		@endif
 		<ul class="mt-2">
 			@foreach($candidate->offers as $o)
 				<li class="border p-2 mb-2">
 					<strong>{{ $o->title }}</strong>
+					@if($o->status === 'sent')
+						<span class="text-green-600 ml-2">Sent</span>
+					@elseif($o->status === 'accepted')
+						<span class="text-blue-600 ml-2">Accepted</span>
+					@elseif($o->status === 'rejected')
+						<span class="text-red-600 ml-2">Rejected</span>
+					@else
+						<span class="text-gray-600 ml-2">Draft</span>
+					@endif
 				</li>
 			@endforeach
 		</ul>
