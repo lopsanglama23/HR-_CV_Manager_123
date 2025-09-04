@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('candidates/{candidate}/assessments', [AssessmentController::class, 'store'])->name('candidates.assessments.store');
     Route::delete('candidates/{candidate}/assessments/{assessment}', [AssessmentController::class, 'destroy'])->name('candidates.assessments.destroy');
 
+    Route::get('candidates/{candidate}/interviews', [InterviewController::class, 'index'])->name('candidates.interviews.index');
     Route::post('candidates/{candidate}/interviews', [InterviewController::class, 'store'])->name('candidates.interviews.store');
     Route::patch('candidates/{candidate}/interviews/{interview}', [InterviewController::class, 'update'])->name('candidates.interviews.update');
     Route::delete('candidates/{candidate}/interviews/{interview}', [InterviewController::class, 'destroy'])->name('candidates.interviews.destroy');

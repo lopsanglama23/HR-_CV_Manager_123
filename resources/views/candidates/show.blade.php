@@ -36,52 +36,15 @@
 		</div>
 
 		<div>
-        <h2 class="font-semibold mb-2">Schedule Interview</h2>
-        <p class="mb-2">Scheduling interview for: <strong>{{ $candidate->name }}</strong></p>
-                <form method="post" action="{{ route('candidates.interviews.store',$candidate) }}" class="space-y-2">
-                    @csrf
-					
-                    <select name="round" class="border p-2 w-full">
-                        <option value="first">First</option>
-                        <option value="second">Second</option>
-                        <option value="third">Third</option>
-                    </select>
-                    <input type="datetime-local" name="scheduled_at" class="border p-2 w-full" required />
-                    <select name="interviewer" class="border p-2 w-full" required>
-                        @foreach(config('interviewers') as $interviewer)
-                            <option value="{{ $interviewer['name'] }}|{{ $interviewer['email'] }}">{{ $interviewer['name'] }} ({{ $interviewer['email'] }})</option>
-                        @endforeach
-                    </select>
-                    <textarea name="remarks" class="border p-2 w-full" placeholder="Remarks"></textarea>
-                    <button class="bg-blue-600 text-white px-4 py-2">Schedule</button>
-                </form>
-    	</div>
-
-		<div class="border p-3">
 			<h2 class="font-semibold mb-2">Interviews</h2>
-			@foreach($candidate->interviews as $i)
-				<div class="border p-2 mb-2">
-					<div><strong>{{ ucfirst($i->round) }}</strong> - {{ $i->scheduled_at->format('d M Y H:i') }}</div>
-					<div class="text-sm">{{ $i->interviewer_name }} ({{ $i->interviewer_email }})</div>
-					<div class="text-sm">Remarks: {{ $i->remarks }}</div>
-					<form method="post" class="mt-1 flex gap-2" action="{{ route('candidates.interviews.update',[$candidate,$i]) }}">
-						@csrf
-						@method('PATCH')
-						<select name="result" class="border p-1">
-							@foreach(['pending','pass','fail'] as $r)
-								<option value="{{ $r }}" @selected($i->result===$r)>{{ ucfirst($r) }}</option>
-							@endforeach
-						</select>
-						<button class="bg-gray-700 text-white px-2">Save</button>
-						<button class="bg-red-600 text-white px-2" type="button" onclick="if(confirm('Are you sure?')) { document.getElementById('delete-form-{{ $i->id }}').submit(); }">Delete</button>
-					</form>
-					<form id="delete-form-{{ $i->id }}" method="post" action="{{ route('candidates.interviews.destroy',[$candidate,$i]) }}" style="display: none;">
-						@csrf
-						@method('DELETE')
-					</form>
-				</div>
-			@endforeach
+			<p class="mb-2">Total Interviews: {{ $candidate->interviews->count() }}</p>
+			@if($candidate->interviews->count() > 0)
+				<p>Latest: {{ ucfirst($candidate->interviews->sortByDesc('scheduled_at')->first()->round) }} - {{ $candidate->interviews->sortByDesc('scheduled_at')->first()->scheduled_at->format('d M Y H:i') }}</p>
+			@endif
+			<a href="{{ route('candidates.interviews.index', $candidate) }}" class="text-blue-600">Manage Interviews</a>
 		</div>
+
+
 	</div>
 	<div class="grid md:grid-cols-2 gap-4">
 		<div class="border p-3">

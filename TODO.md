@@ -19,3 +19,11 @@ Followup Steps:
 - Verify the link from show page to interviews page works correctly
 - Ensure interview updates still work from the show page summary
 - Check that the email reminder functionality still works
+
+Completed:
+- [x] Created resources/views/candidates/interviews.blade.php
+- [x] Added index method to InterviewController
+- [x] Added route for candidates/{candidate}/interviews
+- [x] Moved scheduling form and list to new page
+- [x] Updated show.blade.php with summary and link
+- [x] Fixed validation to 'after:now' for scheduling

@@ -6,14 +6,22 @@ use App\Models\Candidate;
 use App\Models\Interview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InterviewScheduled;
+use App\Mail\InterviewRejection;
 
 class InterviewController extends Controller
 {
+	public function index(Candidate $candidate)
+	{
+		return view('candidates.interviews', compact('candidate'));
+	}
+
 	public function store(Request $request, Candidate $candidate): RedirectResponse
 	{
 		$data = $request->validate([
 			'round' => ['required', 'in:first,second,third'],
-			'scheduled_at' => ['required', 'date'],
+			'scheduled_at' => ['required', 'date', 'after:now'],
 			'interviewer' => ['required', 'string'],
 			'remarks' => ['nullable', 'string'],
 		]);
@@ -26,7 +34,7 @@ class InterviewController extends Controller
 		// Send email notification to candidate
 		if ($candidate->email) {
 			try {
-				\Mail::to($candidate->email)->send(new \App\Mail\InterviewScheduled($interview));
+				Mail::to($candidate->email)->send(new InterviewScheduled($interview));
 			} catch (\Exception $e) {
 				// Log the error but don't fail the scheduling
 				\Log::error('Failed to send interview scheduling email: ' . $e->getMessage());
@@ -36,7 +44,7 @@ class InterviewController extends Controller
 		// Send reminder email to interviewer
 		if ($interview->interviewer_email) {
 			try {
-				\Mail::to($interview->interviewer_email)->send(new \App\Mail\InterviewReminder($interview));
+				Mail::to($interview->interviewer_email)->send(new \App\Mail\InterviewReminder($interview));
 			} catch (\Exception $e) {
 				// Log the error but don't fail the scheduling
 				\Log::error('Failed to send interview reminder email: ' . $e->getMessage());
@@ -49,7 +57,7 @@ class InterviewController extends Controller
 	public function update(Request $request, Candidate $candidate, Interview $interview): RedirectResponse
 	{
 		$data = $request->validate([
-			'scheduled_at' => ['sometimes', 'date'],
+			'scheduled_at' => ['sometimes', 'date', 'after:now'],
 			'interviewer_name' => ['nullable', 'string', 'max:255'],
 			'interviewer_email' => ['nullable', 'email'],
 			'remarks' => ['nullable', 'string'],
@@ -69,12 +77,22 @@ class InterviewController extends Controller
 				$candidate->status = 'third_interview';
 				$candidate->save();
 			}
+
+			// Send acceptance email for passed interviews
+			if ($interview->candidate->email) {
+				try {
+					// We'll create a new mail class for interview acceptance
+					Mail::to($interview->candidate->email)->send(new \App\Mail\InterviewAcceptance($interview));
+				} catch (\Exception $e) {
+					\Log::error('Failed to send interview acceptance email: ' . $e->getMessage());
+				}
+			}
 		}
 
-		// Send rejection email if second interview failed
-		if ($interview->round === 'second' && $data['result'] === 'fail' && $interview->candidate->email) {
+		// Send rejection email if interview failed
+		if ($data['result'] === 'fail' && $interview->candidate->email) {
 			try {
-				\Mail::to($interview->candidate->email)->send(new \App\Mail\InterviewRejection($interview));
+				Mail::to($interview->candidate->email)->send(new InterviewRejection($interview));
 			} catch (\Exception $e) {
 				\Log::error('Failed to send rejection email: ' . $e->getMessage());
 			}
@@ -89,5 +107,3 @@ class InterviewController extends Controller
 		return back()->with('status', 'Interview deleted');
 	}
 }
-
-
