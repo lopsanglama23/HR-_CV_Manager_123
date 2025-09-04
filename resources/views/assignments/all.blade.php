@@ -7,7 +7,7 @@
     @endif
 
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">All Assignments</h1>
+        <h1 style="color: #333;">All Assignments</h1>
         <a href="{{ route('candidates.index') }}" class="text-blue-600">Back to Candidates</a>
     </div>
 

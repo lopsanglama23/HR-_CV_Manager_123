@@ -95,7 +95,7 @@
 			@if($candidate->interviews()->where('round', 'second')->where('result', 'pass')->exists())
 				<form method="post" action="{{ route('candidates.assessments.store',$candidate) }}" enctype="multipart/form-data" class="space-y-2 mb-3">
 					@csrf
-					<input name="title" class="border p-2 w-full" placeholder="Assessment title" required />
+					<input name="title" class="border p-2 w-full" placeholder="Assessment title"/>
 					<input type="number" name="score" class="border p-2 w-full" placeholder="Score (0-100)" />
 					<textarea name="remarks" class="border p-2 w-full" placeholder="Remarks"></textarea>
 					<input type="file" name="attachment" class="border p-2 w-full" />

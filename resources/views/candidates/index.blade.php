@@ -37,8 +37,13 @@
 				<td class="p-2">{{ $c->technology }}</td>
 				<td class="p-2">{{ ucfirst($c->level) }}</td>
 				<td class="p-2">{{ ucfirst(str_replace('_',' ',$c->status)) }}</td>
-				<td class="p-2">
+				<td class="p-2 flex gap-2">
 					<a href="{{ route('candidates.show',$c) }}" class="text-blue-600">View</a>
+					<form method="post" action="{{ route('candidates.destroy', $c) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this candidate?')">
+						@csrf
+						@method('DELETE')
+						<button type="submit" class="text-red-600">Delete</button>
+					</form>
 				</td>
 			</tr>
 		@endforeach
