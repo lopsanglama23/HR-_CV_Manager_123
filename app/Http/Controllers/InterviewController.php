@@ -78,10 +78,10 @@ class InterviewController extends Controller
 				$candidate->save();
 			}
 
-			// Send acceptance email for passed interviews
+			// Send acceptance email for passed interviews to candidate
 			if ($interview->candidate->email) {
 				try {
-					// We'll create a new mail class for interview acceptance
+				
 					Mail::to($interview->candidate->email)->send(new \App\Mail\InterviewAcceptance($interview));
 				} catch (\Exception $e) {
 					\Log::error('Failed to send interview acceptance email: ' . $e->getMessage());
@@ -89,7 +89,7 @@ class InterviewController extends Controller
 			}
 		}
 
-		// Send rejection email if interview failed
+		// Send rejection email if interview failed to candidate
 		if ($data['result'] === 'fail' && $interview->candidate->email) {
 			try {
 				Mail::to($interview->candidate->email)->send(new InterviewRejection($interview));
