@@ -13,6 +13,7 @@ class Assessment extends Model
 	protected $fillable = [
 		'candidate_id',
 		'title',
+		'type',
 		'remarks',
 		'attachment_path',
 		'score',

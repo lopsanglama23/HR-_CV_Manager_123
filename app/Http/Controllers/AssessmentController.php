@@ -14,14 +14,9 @@ class AssessmentController extends Controller
 {
 	public function store(Request $request, Candidate $candidate): RedirectResponse
 	{
-		// Check the candidate has completed the second round interview or not 
-		$secondRoundCompleted = $candidate->interviews()->where('round', 'second')->where('result', 'pass')->exists();
-		if (!$secondRoundCompleted) {
-			return back()->withErrors(['error' => 'Assessment can only be given after the second round of interview is completed.']);
-		}
-
 		$data = $request->validate([
 			'title' => ['required', 'string', 'max:255'],
+			'type' => ['nullable', 'in:behavioral,test'],
 			'remarks' => ['nullable', 'string'],
 			'score' => ['nullable', 'integer', 'between:0,100'],
 			'attachment' => ['nullable', 'file', 'max:10240'],
