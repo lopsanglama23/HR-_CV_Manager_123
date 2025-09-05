@@ -51,7 +51,7 @@ class CandidateController extends Controller
 		}
 		$candidate = Candidate::create($data);
 
-		// Send email to references
+		// Send Reference Email
 		if ($candidate->references) {
 			$referenceEmails = array_map('trim', explode(',', $candidate->references));
 			foreach ($referenceEmails as $email) {
