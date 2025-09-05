@@ -20,7 +20,7 @@ Next Steps:
 
 We appreciate your interest in joining Cellapp and look forward to potentially welcoming you to our team.
 
-If you have any questions about the next steps, please feel free to contact us at hr@cellapp.com or call (555) 123-4567.
+If you have any questions about the next steps, please feel free to contact us at hr@cellapp.com or call +977 9876543211.
 
 Best regards,
 Cellapp HR Team

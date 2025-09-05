@@ -44,8 +44,6 @@ class OfferController extends Controller
 			'benefits' => ['required', 'string'],
 			'contingencies' => ['required', 'string'],
 		]);
-
-		// Generate the markdown content
 		$body_markdown = $this->generateOfferLetterMarkdown($data, $candidate);
 
 		OfferLetter::create([
@@ -68,8 +66,6 @@ class OfferController extends Controller
 			'benefits' => ['required', 'string'],
 			'contingencies' => ['required', 'string'],
 		]);
-
-		// Create a formatted offer letter content
 		$body_markdown = $this->generateOfferLetterMarkdown($data, $candidate);
 
 		$offer = new OfferLetter([
