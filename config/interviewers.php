@@ -14,7 +14,7 @@ return [
         'email' => 'haricellapp@gmail.com',
     ],
     [
-        'name' => 'Ram',
-        'email' => 'Ramcellapp@gmail.com',
+        'name' => 'Karma Lal Lama',
+        'email' => 'laltamanglama900@gmail.com',
     ],
 ];

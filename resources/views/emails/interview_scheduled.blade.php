@@ -19,7 +19,7 @@ Please make sure to:
 - Prepare any questions you may have about the role
 - Have a stable internet connection if this is a virtual interview
 
-If you need to reschedule or have any questions, please contact us at hr@cellapp.com or call (555) 123-4567.
+If you need to reschedule or have any questions, please contact us at hr@cellapp.com or call +977 9876788087.
 
 We look forward to speaking with you!
 
